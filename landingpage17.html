@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blaze Bets - Maximize Your Betting Odds</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+        }
+        header {
+            background-color: #ffffff;
+            padding: 20px;
+            width: 100%;
+            border-bottom: 2px solid #d32f2f;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            color: #d32f2f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+        .subheader {
+            color: #555;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .cta-button {
+            padding: 15px 25px;
+            color: white;
+            background-color: #d32f2f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #b71c1c;
+            transform: scale(1.05);
+        }
+        .section-header {
+            color: #d32f2f;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #d32f2f;
+            display: inline-block;
+            padding-bottom: 5px;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .feature, .stat, .testimonial, .highlight {
+            background-color: #f9f9f9;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .feature:hover, .stat:hover, .testimonial:hover, .highlight:hover {
+            transform: translateY(-5px);
+        }
+        .features h2 {
+            color: #d32f2f;
+        }
+        .highlights h2 {
+            color: #d32f2f;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #d32f2f;
+        }
+        .tab {
+            padding: 15px 25px;
+            margin: 0 5px;
+            color: #d32f2f;
+            background-color: #fff;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s, border-bottom 0.3s;
+        }
+        .tab:hover, .tab.active {
+            background-color: #f9f9f9;
+            border-bottom: 3px solid #d32f2f;
+        }
+        .tab-content {
+            display: none;
+        }
+        .active-tab {
+            display: block;
+        }
+        .stats, .testimonials {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .stat, .testimonial {
+            flex: 1 1 calc(30% - 20px);
+            margin: 10px;
+        }
+        #odds-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #d32f2f;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #1a1a1a;
+        }
+        .submit-button {
+            padding: 15px 25px;
+            color: white;
+            background-color: #d32f2f;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .submit-button:hover {
+            background-color: #b71c1c;
+            transform: scale(1.05);
+        }
+        @media (max-width: 768px) {
+            .cta-button, .submit-button, .tab {
+                width: 100%;
+            }
+            .stat, .testimonial {
+                flex: 1 1 100%;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            rotateOdds();
+            setupTabs();
+        });
+
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active-tab'));
+                    document.getElementById(tab.dataset.target).classList.add('active-tab');
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                });
+            });
+        }
+
+        async function submitForm(event) {
+            event.preventDefault();
+            const firstName = document.getElementById('first-name').value;
+            const lastName = document.getElementById('last-name').value;
+            const email = document.getElementById('email').value;
+            const phoneNumber = document.getElementById('phone-number').value;
+
+            try {
+                const response = await fetch('https://your-backend-api/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ firstName, lastName, email, phoneNumber })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('verification').style.display = 'block';
+                } else {
+                    alert('Submission failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+
+        async function verifyCode(event) {
+            event.preventDefault();
+            const code = document.getElementById('verification-code').value;
+
+            try {
+                const response = await fetch('https://your-backend-api/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('Verification successful. You are now signed up.');
+                } else {
+                    alert('Verification failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+
+        async function fetchLiveOdds() {
+            try {
+                const response = await fetch('https://api.the-odds-api.com/v4/sports/upcoming/odds', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': '14f84c8c06fa61cee61629bb68029662'  // Your API key
+                    }
+                });
+                const oddsData = await response.json();
+                return oddsData;
+            } catch (error) {
+                console.error('Error fetching odds:', error);
+                return [];
+            }
+        }
+
+        function updateOdds(odds) {
+            const oddsContainer = document.getElementById('odds-container');
+            oddsContainer.innerHTML = '';
+            odds.forEach(odd => {
+                const oddElement = document.createElement('div');
+                oddElement.className = 'highlight';
+                oddElement.innerHTML = `<p>${odd.bookmaker} offers ${odd.team} at odds of ${odd.odds}</p>`;
+                oddsContainer.appendChild(oddElement);
+            });
+        }
+
+        async function rotateOdds() {
+            const odds = await fetchLiveOdds();
+            let index = 0;
+            setInterval(() => {
+                if (odds.length > 0) {
+                    updateOdds([odds[index]]);
+                    index = (index + 1) % odds.length;
+                }
+            }, 5000);
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1><img src="https://via.placeholder.com/40" alt="Blaze Bets Logo" class="logo"> Blaze Bets</h1>
+        <p class="subheader">Maximize Your Betting Odds with Real-Time Comparisons</p>
+        <button class="cta-button" onclick="document.getElementById('interest-form').scrollIntoView({behavior: 'smooth'});">Get Started</button>
+    </header>
+    <div class="tabs">
+        <button class="tab active" data-target="features">Features</button>
+        <button class="tab" data-target="stats">Stats</button>
+        <button class="tab" data-target="testimonials">Testimonials</button>
+        <button class="tab" data-target="highlights">Highlights</button>
+    </div>
+    <div class="container">
+        <div id="features" class="tab-content active-tab">
+            <div class="features">
+                <h2 class="section-header">Why Blaze Bets?</h2>
+                <div class="feature">
+                    <h3>Find the Best Odds</h3>
+                    <p>Compare betting odds from top platforms like FanDuel, DraftKings, and Fanatics.</p>
+                </div>
+                <div class="feature">
+                    <h3>Real-Time Alerts</h3>
+                    <p>Get notified instantly when better odds are available.</p>
+                </div>
+                <div class="feature">
+                    <h3>Easy Navigation</h3>
+                    <p>Seamlessly switch between platforms to place your bets.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="stats" class="tab-content">
+            <h2 class="section-header">Relevant Stats</h2>
+            <div class="stats">
+                <div class="stat">
+                    <p>Users of Blaze Bets have seen an average increase of 5% in their betting returns.</p>
+                </div>
+                <div class="stat">
+                    <p>Comparison of Payouts: A $100 bet at -115 odds yields $87, while the same bet at -105 odds yields $95.20. This difference adds up over time.</p>
+                </div>
+                <div class="stat">
+                    <p>Savings on Commissions: A bettor placing $5,000 in cumulative wagers would save approximately $109 by consistently finding -105 lines instead of -110.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="testimonials" class="tab-content">
+            <h2 class="section-header">Testimonials</h2>
+            <div class="testimonials">
+                <div class="testimonial">
+                    <p>"Blaze Bets has saved me hundreds of dollars by ensuring I get the best odds available. It's a game changer!" - John D.</p>
+                </div>
+                <div class="testimonial">
+                    <p>"I love the real-time alerts. Now I never miss out on the best betting opportunities." - Sarah K.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="highlights" class="tab-content">
+            <div class="highlights">
+                <h2 class="section-header">Top Odds of the Day</h2>
+                <div id="odds-container"></div>
+            </div>
+        </div>
+
+        <div class="form-container" id="interest-form">
+            <h2 class="section-header">Stay Updated</h2>
+            <p>Enter your details below to stay informed about Blaze Bets:</p>
+            <form onsubmit="submitForm(event)">
+                <div class="form-group">
+                    <input type="text" id="first-name" name="first-name" placeholder="First Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="last-name" name="last-name" placeholder="Last Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="phone-number" name="phone-number" placeholder="Phone Number" required>
+                </div>
+                <button type="submit" class="submit-button">Submit</button>
+            </form>
+        </div>
+        
+        <div class="form-container" id="verification" style="display: none;">
+            <h2 class="section-header">Verify Your Number</h2>
+            <p>Enter the code sent to your phone:</p>
+            <form onsubmit="verifyCode(event)">
+                <div class="form-group">
+                    <input type="number" id="verification-code" name="verification-code" placeholder="Verification Code" required>
+                </div>
+                <button type="submit" class="submit-button">Verify</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
